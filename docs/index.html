@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Docs — Ugly Avatars for your Beautiful UI</title>
+    <meta name="description"
+        content="Ugly avatars for your beautiful UI. Generate unique, deterministic vector avatars for your web apps and users.">
+    <meta name="keywords"
+        content="ugly avatars, vector avatars, SVG avatars, generative avatars, profile pictures, avatar generator, reicon avatars">
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#0d0d0d">
+    <link rel="canonical" href="https://avatars.reicon.dev/docs/">
+    <link rel="manifest" href="/assets/site.webmanifest">
+    <link rel="icon" type="image/png" sizes="48x48" href="/assets/icon-48.png">
+    <link rel="icon" type="image/png" sizes="128x128" href="/assets/icon-128.png">
+    <link rel="apple-touch-icon" sizes="192x192" href="/assets/icon-192.png">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://avatars.reicon.dev/docs/">
+    <meta property="og:title" content="Docs — Ugly Avatars for your Beautiful UI">
+    <meta property="og:description" content="Ugly avatars for your beautiful UI. Generate unique, deterministic vector avatars for your web apps and users.">
+    <meta property="og:image" content="https://avatars.reicon.dev/assets/meta.png">
+    <meta property="og:site_name" content="Ugly Avatars">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Docs — Ugly Avatars for your Beautiful UI">
+    <meta name="twitter:description" content="Ugly avatars for your beautiful UI. Generate unique, deterministic vector avatars for your web apps and users.">
+    <meta name="twitter:image" content="https://avatars.reicon.dev/assets/meta.png">
+
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "TechArticle",
+      "headline": "Docs — Ugly Avatars for your Beautiful UI",
+      "description": "Ugly avatars for your beautiful UI. Generate unique, deterministic vector avatars for your web apps and users.",
+      "url": "https://avatars.reicon.dev/docs/"
+    }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0d0d0d;
+            --surface-1: #141414;
+            --surface-2: #1c1c1c;
+            --surface-3: #262626;
+            --text: #ffffff;
+            --text-alt: #999999;
+            --text-muted: #555555;
+            --accent: #3b82f6;
+            --keyword: #c678dd;
+            --string: #98c379;
+            --fn: #61afef;
+            --tag-code: #222222;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        button:focus, a:focus {
+            outline: none;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        html,
+        body {
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100dvh;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: clip;
+        }
+
+        /* Header Navigation */
+        .nav-container {
+            width: 100%;
+            max-width: 1800px;
+            margin: 0 auto;
+            padding: 24px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: transparent;
+            border: 0;
+            color: var(--text);
+            cursor: pointer;
+            padding: 6px;
+            border-radius: 8px;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s;
+        }
+
+        .mobile-menu-btn:hover {
+            background: var(--surface-1);
+        }
+
+        .menu-icon-svg { display: block; }
+        .close-icon-svg { display: none; }
+        .mobile-menu-btn.is-open .menu-icon-svg { display: none; }
+        .mobile-menu-btn.is-open .close-icon-svg { display: block; }
+
+        .mobile-dropdown {
+            display: none;
+            position: absolute;
+            top: calc(100% - 10px);
+            right: 20px;
+            left: 20px;
+            background: var(--surface-1);
+            border-radius: 14px;
+            padding: 16px;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 999;
+            box-shadow: 0 16px 36px rgba(0, 0, 0, 0.6);
+            opacity: 0;
+            transform: translateY(-8px);
+            transition: opacity 0.2s ease, transform 0.2s ease;
+            pointer-events: none;
+        }
+
+        .mobile-dropdown.is-open {
+            display: flex;
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+
+        .mobile-dropdown-link {
+            color: var(--text-alt);
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            padding: 10px 14px;
+            border-radius: 8px;
+            transition: background-color 0.2s, color 0.2s;
+        }
+
+        .mobile-dropdown-link:hover {
+            color: var(--text);
+            background: var(--surface-2);
+        }
+
+        .mobile-dropdown-btn {
+            background: var(--surface-2);
+            color: var(--text);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            padding: 10px 16px;
+            border-radius: 9999px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 4px;
+        }
+
+        .nav-btn:hover {
+            background: var(--surface-2);
+        }
+
+        .logo {
+            font-size: 1.15rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: var(--text);
+        }
+
+        .logo-img,
+        .logo-icon {
+            width: 28px;
+            height: 28px;
+            object-fit: cover;
+            display: inline-block;
+        }
+
+        .nav-links {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 28px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .nav-links a {
+            color: var(--text-alt);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .nav-links a.active,
+        .nav-links a:hover {
+            color: var(--text);
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .nav-btn {
+            background: var(--surface-1);
+            color: var(--text);
+            border: 0;
+            border-radius: 9999px;
+            padding: 8px 18px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: background-color 0.2s;
+        }
+
+        .nav-btn:hover {
+            background: var(--surface-2);
+        }
+
+        /* Docs Layout - Center Content & Shift TOC Right */
+        .docs-wrapper {
+            width: 100%;
+            max-width: 1240px;
+            margin: 0 auto;
+            padding: 60px 24px 120px 24px;
+            display: grid;
+            grid-template-columns: 220px 1fr 220px;
+            gap: 48px;
+            align-items: start;
+        }
+
+        .docs-spacer {
+            display: block;
+        }
+
+        .docs-content {
+            width: 100%;
+            max-width: 720px;
+            margin: 0 auto;
+            min-width: 0;
+        }
+
+        .intro-lead {
+            font-size: 0.95rem;
+            line-height: 1.7;
+            color: var(--text-alt);
+            margin-bottom: 40px;
+        }
+
+        code.inline-code {
+            background: var(--tag-code);
+            color: #e0e0e0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.82rem;
+            padding: 2px 7px;
+            border-radius: 5px;
+        }
+
+        /* Section Headings */
+        h2.section-title {
+            font-size: 1.15rem;
+            font-weight: 500;
+            letter-spacing: -0.01em;
+            margin: 44px 0 16px 0;
+            color: var(--text);
+            scroll-margin-top: 100px;
+        }
+
+        .section-desc {
+            font-size: 0.9rem;
+            color: var(--text-alt);
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        /* Code Card Box */
+        .code-box {
+            background: var(--surface-1);
+            padding: 20px 48px 20px 24px;
+            position: relative;
+            margin-bottom: 28px;
+        }
+
+        /* API Endpoint Card */
+        .api-endpoint {
+            display: flex;
+            align-items: center;
+            background: var(--surface-2);
+            padding: 12px 16px;
+            margin-bottom: 12px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            overflow-x: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .api-endpoint::-webkit-scrollbar {
+            display: none;
+        }
+
+        .api-endpoint .method {
+            font-weight: 700;
+            margin-right: 16px;
+        }
+
+        .api-endpoint .method.get {
+            color: #10b981;
+        }
+
+        .api-endpoint .url {
+            color: var(--text);
+            white-space: nowrap;
+        }
+
+        .api-endpoint .param {
+            color: var(--keyword);
+        }
+
+        .code-box-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .pm-tabs {
+            display: flex;
+            gap: 16px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.82rem;
+        }
+
+        .pm-tab {
+            color: var(--text-muted);
+            cursor: pointer;
+            background: transparent;
+            border: 0;
+            font-family: inherit;
+            font-size: inherit;
+            transition: color 0.2s;
+        }
+
+        .pm-tab.active {
+            color: var(--text);
+            background: var(--surface-2);
+            padding: 3px 10px;
+            border-radius: 6px;
+        }
+
+        .copy-icon-btn {
+            background: transparent;
+            border: 0;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            transition: color 0.2s, background-color 0.2s;
+        }
+
+        .copy-icon-btn:hover {
+            color: var(--text);
+            background: var(--surface-2);
+        }
+
+        pre {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            line-height: 1.65;
+            color: #e0e0e0;
+            white-space: pre-wrap;
+            word-break: break-word;
+            overflow-x: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        pre::-webkit-scrollbar,
+        .table-wrapper::-webkit-scrollbar,
+        body::-webkit-scrollbar {
+            display: none;
+        }
+
+        .token-kw {
+            color: var(--keyword);
+        }
+
+        .token-str {
+            color: var(--string);
+        }
+
+        .token-fn {
+            color: var(--fn);
+        }
+
+        .token-attr {
+            color: #d19a66;
+        }
+
+        /* Parameters Table Card */
+        .table-card {
+            background: var(--surface-1);
+            overflow: hidden;
+            margin-bottom: 28px;
+        }
+
+        .table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .params-table {
+            width: 100%;
+            min-width: 520px;
+            border-collapse: collapse;
+        }
+
+        .params-table th {
+            background: var(--surface-2);
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            padding: 14px 20px;
+            text-align: left;
+            border-bottom: 1px solid var(--surface-3);
+        }
+
+        .params-table td {
+            padding: 14px 20px;
+            font-size: 0.88rem;
+            color: var(--text-alt);
+            border-bottom: 1px solid var(--surface-2);
+            line-height: 1.5;
+        }
+
+        .params-table tr:last-child td {
+            border-bottom: 0;
+        }
+
+        .param-name {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--text);
+            font-weight: 500;
+        }
+
+        /* Sidebar Navigation - Sticky Table of Contents */
+        .sidebar {
+            position: sticky;
+            top: 100px;
+            align-self: start;
+            height: fit-content;
+            max-height: calc(100vh - 120px);
+            overflow-y: auto;
+            scrollbar-width: none;
+        }
+
+        .sidebar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .sidebar-title {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text);
+            margin-bottom: 14px;
+        }
+
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .sidebar-nav a {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            padding: 5px 0;
+            transition: color 0.2s;
+            display: block;
+        }
+
+        .sidebar-nav a:hover {
+            color: var(--text-alt);
+            background: transparent;
+        }
+
+        .sidebar-nav a.active {
+            color: var(--text);
+            background: transparent;
+            font-weight: 600;
+        }
+
+        /* Responsive */
+        @media (max-width: 1180px) {
+            .docs-wrapper {
+                grid-template-columns: 1fr 220px;
+            }
+
+            .docs-spacer {
+                display: none;
+            }
+        }
+
+        @media (max-width: 820px) {
+            .docs-wrapper {
+                grid-template-columns: 1fr;
+                padding: 40px 20px 80px 20px;
+            }
+
+            .sidebar {
+                display: none;
+            }
+        }
+
+        @media (max-width: 640px) {
+
+            .nav-links,
+            .nav-actions {
+                display: none !important;
+            }
+
+            .mobile-menu-btn {
+                display: inline-flex !important;
+            }
+
+            .nav-container {
+                padding: 18px 20px;
+            }
+        }
+
+        /* API Live Rendering Preview Box */
+        .api-preview-box {
+            background: var(--surface-1);
+            border-radius: 14px;
+            padding: 28px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 28px;
+            margin-bottom: 32px;
+        }
+
+        @media (max-width: 580px) {
+            .api-preview-box {
+                flex-direction: column;
+                gap: 20px;
+                padding: 24px 16px;
+            }
+            .preview-arrow svg {
+                transform: rotate(90deg);
+            }
+        }
+
+        .preview-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .preview-avatar {
+            width: 100px;
+            height: 100px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .preview-avatar svg {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .preview-arrow {
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .preview-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.78rem;
+            color: var(--text-alt);
+            background: var(--surface-2);
+            padding: 5px 12px;
+            border-radius: 6px;
+        }
+
+        /* Toast Notification & Stack Styling */
+        .tst-stack {
+            position: fixed;
+            bottom: 28px;
+            left: 0;
+            right: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 99999;
+            pointer-events: none;
+        }
+
+        .tst-item {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 220px;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.14);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            color: #ffffff;
+            padding: 10px 18px;
+            border-radius: 9999px;
+            font-size: 0.84rem;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border: 0;
+            white-space: nowrap;
+            pointer-events: auto;
+            transition: opacity 0.25s ease, transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .tst-check-icon {
+            width: 14px;
+            height: 14px;
+            flex-shrink: 0;
+            color: #34d399;
+        }
+
+        .tst-text {
+            color: #ffffff;
+            font-weight: 500;
+        }
+
+        .docs-hero-title {
+            font-size: 2.2rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 16px;
+            color: var(--text);
+            line-height: 1.2;
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.5); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="nav-container">
+        <a href="/" class="logo">
+            <img src="/assets/icon-512.png" alt="Reicon Logo" class="logo-img">
+        </a>
+
+        <nav class="nav-links">
+            <a href="/">Home</a>
+            <a href="/docs/" class="active">Docs</a>
+        </nav>
+
+        <div class="nav-actions">
+            <a href="https://github.com/dqev/reicon-avatars" target="_blank" rel="noopener" class="nav-btn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+                </svg>
+                GitHub
+            </a>
+        </div>
+
+        <!-- Mobile Menu Toggle Button -->
+        <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle Navigation Menu">
+            <svg class="menu-icon-svg" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg" width="22" height="22">
+                <path d="M10.666666666666666 12v1.3333333333333333H3.333333333333333v-1.3333333333333333h7.333333333333333Zm3.333333333333333 -4.666666666666666v1.3333333333333333H2v-1.3333333333333333h12Zm-1.3333333333333333 -4.666666666666666v1.3333333333333333H5.333333333333333V2.6666666666666665h7.333333333333333Z"></path>
+            </svg>
+            <svg class="close-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" xmlns="http://www.w3.org/2000/svg" width="22" height="22">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+        </button>
+
+        <!-- Mobile Dropdown Menu -->
+        <div class="mobile-dropdown" id="mobileDropdown">
+            <a href="/" class="mobile-dropdown-link">Home</a>
+            <a href="/docs/" class="mobile-dropdown-link">Docs</a>
+            <a href="https://github.com/dqev/reicon-avatars" target="_blank" rel="noopener" class="mobile-dropdown-btn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+                </svg>
+                GitHub
+            </a>
+        </div>
+    </header>
+
+    <main class="docs-wrapper">
+        <div class="docs-spacer"></div>
+        <div class="docs-content">
+            <h1 class="docs-hero-title">Ugly Avatars API &amp; Documentation</h1>
+            <p class="intro-lead">
+                A deterministic vector avatar for any seed, rendered on demand via <code
+                    class="inline-code">&lt;svg&gt;</code>. The same seed always yields the same avatar, with no stored images and no network
+                database. Self-contained: the engine is edge-native.
+            </p>
+
+            <!-- Quickstart Section -->
+            <section id="quickstart">
+                <h2 class="section-title">Quickstart</h2>
+                <p class="section-desc">Embed generative avatars directly into HTML, React, or any framework using simple image tags.</p>
+
+                <div class="code-box" data-squircle-radius="14" data-squircle-smoothing="60">
+                    <button class="copy-icon-btn" id="btnCopyQuickstart" title="Copy Code"
+                        style="position: absolute; right: 16px; top: 16px;">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+                            <path fill-rule="evenodd" clip-rule="evenodd"
+                                d="M15 1.25H10.9436C9.10583 1.24998 7.65019 1.24997 6.51098 1.40314C5.33856 1.56076 4.38961 1.89288 3.64124 2.64124C2.89288 3.38961 2.56076 4.33856 2.40314 5.51098C2.24997 6.65019 2.24998 8.10582 2.25 9.94357V16C2.25 17.8722 3.62205 19.424 5.41551 19.7047C5.55348 20.4687 5.81753 21.1208 6.34835 21.6517C6.95027 22.2536 7.70814 22.5125 8.60825 22.6335C9.47522 22.75 10.5775 22.75 11.9451 22.75H15.0549C16.4225 22.75 17.5248 22.75 18.3918 22.6335C19.2919 22.5125 20.0497 22.2536 20.6517 21.6517C21.2536 21.0497 21.5125 20.2919 21.6335 19.3918C21.75 18.5248 21.75 17.4225 21.75 16.0549V10.9451C21.75 9.57754 21.75 8.47522 21.6335 7.60825C21.5125 6.70814 21.2536 5.95027 20.6517 5.34835C20.1208 4.81753 19.4687 4.55348 18.7047 4.41551C18.424 2.62205 16.8722 1.25 15 1.25ZM17.1293 4.27117C16.8265 3.38623 15.9876 2.75 15 2.75H11C9.09318 2.75 7.73851 2.75159 6.71085 2.88976C5.70476 3.02502 5.12511 3.27869 4.7019 3.7019C4.27869 4.12511 4.02502 4.70476 3.88976 5.71085C3.75159 6.73851 3.75 8.09318 3.75 10V16C3.75 16.9876 4.38624 17.8265 5.27117 18.1293C5.24998 17.5194 5.24999 16.8297 5.25 16.0549V10.9451C5.24998 9.57754 5.24996 8.47522 5.36652 7.60825C5.48754 6.70814 5.74643 5.95027 6.34835 5.34835C6.95027 4.74643 7.70814 4.48754 8.60825 4.36652C9.47522 4.24996 10.5775 4.24998 11.9451 4.25H15.0549C15.8297 4.24999 16.5194 4.24998 17.1293 4.27117ZM7.40901 6.40901C7.68577 6.13225 8.07435 5.9518 8.80812 5.85315C9.56347 5.75159 10.5646 5.75 12 5.75H15C16.4354 5.75 17.4365 5.75159 18.1919 5.85315C18.9257 5.9518 19.3142 6.13225 19.591 6.40901C19.8678 6.68577 20.0482 7.07435 20.1469 7.80812C20.2484 8.56347 20.25 9.56458 20.25 11V16C20.25 17.4354 20.2484 18.4365 20.1469 19.1919C20.0482 19.9257 19.8678 20.3142 19.591 20.591C19.3142 20.8678 18.9257 20.8678 18.1919 21.1469C17.4365 21.2484 16.4354 21.25 15 21.25H12C10.5646 21.25 9.56347 21.2484 8.80812 21.1469C8.07435 21.0482 7.68577 20.8678 7.40901 20.591C7.13225 20.3142 6.9518 19.9257 6.85315 19.1919C6.75159 18.4365 6.75 17.4354 6.75 16V11C6.75 9.56458 6.75159 8.56347 6.85315 7.80812C6.9518 7.07435 7.13225 6.68577 7.40901 6.40901Z"
+                                fill="currentColor"></path>
+                        </svg>
+                    </button>
+                    <pre><span class="token-kw">&lt;img</span> <span class="token-attr">src</span>=<span class="token-str">"https://avatars.reicon.dev/v1/svg/dev?size=400&amp;shape=square"</span> <span class="token-attr">alt</span>=<span class="token-str">"Avatar"</span> <span class="token-attr">width</span>=<span class="token-str">"400"</span> <span class="token-attr">height</span>=<span class="token-str">"400"</span> <span class="token-kw">/&gt;</span></pre>
+                </div>
+
+                <!-- API Render Visual Preview Card Box -->
+                <div class="api-preview-box">
+                    <div class="preview-card">
+                        <div class="preview-avatar" id="previewAvatar1"></div>
+                        <span class="preview-label">/v1/svg/alex?shape=squircle</span>
+                    </div>
+                    <div class="preview-arrow">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                            <polyline points="12 5 19 12 12 19"></polyline>
+                        </svg>
+                    </div>
+                    <div class="preview-card">
+                        <div class="preview-avatar" id="previewAvatar2"></div>
+                        <span class="preview-label">/v1/svg/sarah?shape=circle</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- API Endpoints Section -->
+            <section id="endpoints">
+                <h2 class="section-title">API Endpoints</h2>
+                <p class="section-desc">Consume vector or rasterized avatars via HTTP GET requests on our global edge network (<code class="inline-code">https://avatars.reicon.dev</code>).</p>
+
+                <div class="code-box" data-squircle-radius="14" data-squircle-smoothing="60">
+                    <button class="copy-icon-btn" id="btnCopyEndpoints" title="Copy Code"
+                        style="position: absolute; right: 16px; top: 16px;">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+                            <path fill-rule="evenodd" clip-rule="evenodd"
+                                d="M15 1.25H10.9436C9.10583 1.24998 7.65019 1.24997 6.51098 1.40314C5.33856 1.56076 4.38961 1.89288 3.64124 2.64124C2.89288 3.38961 2.56076 4.33856 2.40314 5.51098C2.24997 6.65019 2.24998 8.10582 2.25 9.94357V16C2.25 17.8722 3.62205 19.424 5.41551 19.7047C5.55348 20.4687 5.81753 21.1208 6.34835 21.6517C6.95027 22.2536 7.70814 22.5125 8.60825 22.6335C9.47522 22.75 10.5775 22.75 11.9451 22.75H15.0549C16.4225 22.75 17.5248 22.75 18.3918 22.6335C19.2919 22.5125 20.0497 22.2536 20.6517 21.6517C21.2536 21.0497 21.5125 20.2919 21.6335 19.3918C21.75 18.5248 21.75 17.4225 21.75 16.0549V10.9451C21.75 9.57754 21.75 8.47522 21.6335 7.60825C21.5125 6.70814 21.2536 5.95027 20.6517 5.34835C20.1208 4.81753 19.4687 4.55348 18.7047 4.41551C18.424 2.62205 16.8722 1.25 15 1.25ZM17.1293 4.27117C16.8265 3.38623 15.9876 2.75 15 2.75H11C9.09318 2.75 7.73851 2.75159 6.71085 2.88976C5.70476 3.02502 5.12511 3.27869 4.7019 3.7019C4.27869 4.12511 4.02502 4.70476 3.88976 5.71085C3.75159 6.73851 3.75 8.09318 3.75 10V16C3.75 16.9876 4.38624 17.8265 5.27117 18.1293C5.24998 17.5194 5.24999 16.8297 5.25 16.0549V10.9451C5.24998 9.57754 5.24996 8.47522 5.36652 7.60825C5.48754 6.70814 5.74643 5.95027 6.34835 5.34835C6.95027 4.74643 7.70814 4.48754 8.60825 4.36652C9.47522 4.24996 10.5775 4.24998 11.9451 4.25H15.0549C15.8297 4.24999 16.5194 4.24998 17.1293 4.27117ZM7.40901 6.40901C7.68577 6.13225 8.07435 5.9518 8.80812 5.85315C9.56347 5.75159 10.5646 5.75 12 5.75H15C16.4354 5.75 17.4365 5.75159 18.1919 5.85315C18.9257 5.9518 19.3142 6.13225 19.591 6.40901C19.8678 6.68577 20.0482 7.07435 20.1469 7.80812C20.2484 8.56347 20.25 9.56458 20.25 11V16C20.25 17.4354 20.2484 18.4365 20.1469 19.1919C20.0482 19.9257 19.8678 20.3142 19.591 20.591C19.3142 20.8678 18.9257 20.8678 18.1919 21.1469C17.4365 21.2484 16.4354 21.25 15 21.25H12C10.5646 21.25 9.56347 21.2484 8.80812 21.1469C8.07435 21.0482 7.68577 20.8678 7.40901 20.591C7.13225 20.3142 6.9518 19.9257 6.85315 19.1919C6.75159 18.4365 6.75 17.4354 6.75 16V11C6.75 9.56458 6.75159 8.56347 6.85315 7.80812C6.9518 7.07435 7.13225 6.68577 7.40901 6.40901Z"
+                                fill="currentColor"></path>
+                        </svg>
+                    </button>
+                    
+                    <div class="api-endpoint" data-squircle-radius="8" data-squircle-smoothing="60">
+                        <span class="method get">GET</span>
+                        <span class="url">https://avatars.reicon.dev/v1/svg/<span class="param">{seed}</span>?shape=square|circle|squircle&amp;size=500</span>
+                    </div>
+                    
+                    <div class="api-endpoint" data-squircle-radius="8" data-squircle-smoothing="60" style="margin-bottom: 0;">
+                        <span class="method get">GET</span>
+                        <span class="url">https://avatars.reicon.dev/v1/json/<span class="param">{seed}</span></span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Parameters Section -->
+            <section id="parameters">
+                <h2 class="section-title">Parameters</h2>
+                <p class="section-desc">Customize output shape, dimensions, and seed values via query parameters.</p>
+
+                <div class="table-card" data-squircle-radius="14" data-squircle-smoothing="60">
+                    <div class="table-wrapper">
+                        <table class="params-table">
+                            <thead>
+                                <tr>
+                                    <th>Parameter</th>
+                                    <th>Type</th>
+                                    <th>Default</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="param-name">seed</td>
+                                    <td>string</td>
+                                    <td><code class="inline-code">avatar</code></td>
+                                    <td>Path parameter. Any string or ID used for 100% deterministic avatar generation.</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">shape</td>
+                                    <td>string</td>
+                                    <td><code class="inline-code">square</code></td>
+                                    <td>Outer clipping mask. Options: <code class="inline-code">square</code>, <code class="inline-code">circle</code>, or <code class="inline-code">squircle</code>.</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">size / width / height</td>
+                                    <td>number</td>
+                                    <td><code class="inline-code">500</code></td>
+                                    <td>Output resolution in pixels (e.g. <code class="inline-code">250</code>, <code class="inline-code">400</code>, <code class="inline-code">500</code>).</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Rate Limits Section -->
+            <section id="limits">
+                <h2 class="section-title">Rate Limits &amp; Caching</h2>
+                <p class="section-desc">
+                    Edge requests are rate limited to <strong>100 requests per minute per IP</strong>.<br>
+                    Responses include rate limit diagnostic headers (<code class="inline-code">X-RateLimit-Limit</code>, <code class="inline-code">X-RateLimit-Remaining</code>, <code class="inline-code">X-RateLimit-Reset</code>) and immutable CDN caching (<code class="inline-code">Cache-Control: public, max-age=31536000, immutable</code>).
+                </p>
+            </section>
+
+            <!-- Shape Masking Section -->
+            <section id="shapes">
+                <h2 class="section-title">Shapes &amp; Clipping Masks</h2>
+                <p class="section-desc">Control outer geometry using the <code class="inline-code">shape</code> query parameter. Choose between <code class="inline-code">circle</code>, <code class="inline-code">squircle</code>, or <code class="inline-code">square</code>.</p>
+
+                <div class="api-preview-box">
+                    <div class="preview-card">
+                        <div class="preview-avatar" id="shapeCircle"></div>
+                        <span class="preview-label">shape="circle"</span>
+                    </div>
+                    <div class="preview-arrow">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                            <polyline points="12 5 19 12 12 19"></polyline>
+                        </svg>
+                    </div>
+                    <div class="preview-card">
+                        <div class="preview-avatar" id="shapeSquircle"></div>
+                        <span class="preview-label">shape="squircle"</span>
+                    </div>
+                    <div class="preview-arrow">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                            <polyline points="12 5 19 12 12 19"></polyline>
+                        </svg>
+                    </div>
+                    <div class="preview-card">
+                        <div class="preview-avatar" id="shapeSquare"></div>
+                        <span class="preview-label">shape="square"</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Seed Determinism Section -->
+            <section id="seeds">
+                <h2 class="section-title">Seed Determinism</h2>
+                <p class="section-desc">Pass any string, email, or user ID as a seed. The generator produces a 100% unique avatar with consistent palette, torso pattern, and expression every single time.</p>
+
+                <div class="api-preview-box">
+                    <div class="preview-card">
+                        <div class="preview-avatar" id="seedUser1"></div>
+                        <span class="preview-label">seed="user_101"</span>
+                    </div>
+                    <div class="preview-card">
+                        <div class="preview-avatar" id="seedOctocat"></div>
+                        <span class="preview-label">seed="octocat"</span>
+                    </div>
+                    <div class="preview-card">
+                        <div class="preview-avatar" id="seedAntigravity"></div>
+                        <span class="preview-label">seed="antigravity"</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Output Formats Section -->
+            <section id="formats">
+                <h2 class="section-title">Formats (SVG, JSON)</h2>
+                <p class="section-desc">Vector SVG images for web apps, or structured JSON payloads with raw SVG markup.</p>
+
+                <div class="code-box" data-squircle-radius="14" data-squircle-smoothing="60">
+                    <button class="copy-icon-btn" id="btnCopyFormats" title="Copy Code"
+                        style="position: absolute; right: 16px; top: 16px;">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+                            <path fill-rule="evenodd" clip-rule="evenodd"
+                                d="M15 1.25H10.9436C9.10583 1.24998 7.65019 1.24997 6.51098 1.40314C5.33856 1.56076 4.38961 1.89288 3.64124 2.64124C2.89288 3.38961 2.56076 4.33856 2.40314 5.51098C2.24997 6.65019 2.24998 8.10582 2.25 9.94357V16C2.25 17.8722 3.62205 19.424 5.41551 19.7047C5.55348 20.4687 5.81753 21.1208 6.34835 21.6517C6.95027 22.2536 7.70814 22.5125 8.60825 22.6335C9.47522 22.75 10.5775 22.75 11.9451 22.75H15.0549C16.4225 22.75 17.5248 22.75 18.3918 22.6335C19.2919 22.5125 20.0497 22.2536 20.6517 21.6517C21.2536 21.0497 21.5125 20.2919 21.6335 19.3918C21.75 18.5248 21.75 17.4225 21.75 16.0549V10.9451C21.75 9.57754 21.75 8.47522 21.6335 7.60825C21.5125 6.70814 21.5125 5.95027 20.6517 5.34835C20.1208 4.81753 19.4687 4.55348 18.7047 4.41551C18.424 2.62205 16.8722 1.25 15 1.25ZM17.1293 4.27117C16.8265 3.38623 15.9876 2.75 15 2.75H11C9.09318 2.75 7.73851 2.75159 6.71085 2.88976C5.70476 3.02502 5.12511 3.27869 4.7019 3.7019C4.27869 4.12511 4.02502 4.70476 3.88976 5.71085C3.75159 6.73851 3.75 8.09318 3.75 10V16C3.75 16.9876 4.38624 17.8265 5.27117 18.1293C5.24998 17.5194 5.24999 16.8297 5.25 16.0549V10.9451C5.24998 9.57754 5.24996 8.47522 5.36652 7.60825C5.48754 6.70814 5.74643 5.95027 6.34835 5.34835C6.95027 4.74643 7.70814 4.48754 8.60825 4.36652C9.47522 4.24996 10.5775 4.24998 11.9451 4.25H15.0549C15.8297 4.24999 16.5194 4.24998 17.1293 4.27117ZM7.40901 6.40901C7.68577 6.13225 8.07435 5.9518 8.80812 5.85315C9.56347 5.75159 10.5646 5.75 12 5.75H15C16.4354 5.75 17.4365 5.75159 18.1919 5.85315C18.9257 5.9518 19.3142 6.13225 19.591 6.40901C19.8678 6.68577 20.0482 7.07435 20.1469 7.80812C20.2484 8.56347 20.25 9.56458 20.25 11V16C20.25 17.4354 20.2484 18.4365 20.1469 19.1919C20.0482 19.9257 19.8678 20.3142 19.591 20.591C19.3142 20.8678 18.9257 20.8678 18.1919 21.1469C17.4365 21.2484 16.4354 21.25 15 21.25H12C10.5646 21.25 9.56347 21.2484 8.80812 21.1469C8.07435 21.0482 7.68577 20.8678 7.40901 20.591C7.13225 20.3142 6.9518 19.9257 6.85315 19.1919C6.75159 18.4365 6.75 17.4354 6.75 16V11C6.75 9.56458 6.75159 8.56347 6.85315 7.80812C6.9518 7.07435 7.13225 6.68577 7.40901 6.40901Z"
+                                fill="currentColor"></path>
+                        </svg>
+                    </button>
+                    <pre><span class="token-kw">GET</span> /v1/json/dev
+
+<span class="token-str">{
+  "seed": "dev",
+  "shape": "square",
+  "size": 500,
+  "svg": "&lt;svg width=\"500\" height=\"500\" ...&gt;...&lt;/svg&gt;"
+}</span></pre>
+                </div>
+            </section>
+
+            <!-- License Section -->
+            <section id="license">
+                <h2 class="section-title">License</h2>
+                <p class="section-desc">MIT Licensed. Free for commercial and open-source use.</p>
+            </section>
+        </div>
+
+        <!-- Right Sidebar Table of Contents -->
+        <aside class="sidebar">
+            <div class="sidebar-title">Overview</div>
+            <nav class="sidebar-nav">
+                <a href="#quickstart" class="active">Quickstart</a>
+                <a href="#endpoints">API Endpoints</a>
+                <a href="#shapes">Shapes &amp; Masks</a>
+                <a href="#seeds">Seed Determinism</a>
+                <a href="#formats">Formats</a>
+                <a href="#parameters">Parameters</a>
+                <a href="#limits">Rate Limits &amp; Caching</a>
+                <a href="#license">License</a>
+            </nav>
+        </aside>
+    </main>
+
+    <script src="/js/squircle.js"></script>
+    <script src="/js/avatar.js"></script>
+    <script src="/js/toast-stack.js"></script>
+    <script src="/js/docs.js"></script>
+</body>
+
+</html>

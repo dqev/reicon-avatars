@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://avatars.reicon.dev/assets/sitemap.xml

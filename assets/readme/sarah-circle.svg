@@ -1,0 +1,20 @@
+<svg width="500" height="500" viewBox="0 0 500 500" fill="none" xmlns="http://www.w3.org/2000/svg">
+<desc>This avatar is unique and created specifically for @sarah.</desc>
+<g clip-path="url(#clip_4cdd0_circle)">
+<rect width="500" height="500" fill="#ECFDF5"/>
+<path d="M53.073 153.667Q53.756 152.936 53.532 153.911L52.519 158.324Q52.295 159.298 53.026 159.981L56.333 163.073Q57.064 163.756 56.089 163.532L51.676 162.519Q50.702 162.295 50.019 163.026L46.927 166.333Q46.244 167.064 46.468 166.089L47.481 161.676Q47.705 160.702 46.974 160.019L43.667 156.927Q42.936 156.244 43.911 156.468L48.324 157.481Q49.298 157.705 49.981 156.974Z" fill="#6EE7B7"/><path d="M250.616 31.981Q250.959 31.042 251.134 32.026L252.353 38.894Q252.528 39.879 253.467 40.222L260.019 42.616Q260.958 42.959 259.974 43.134L253.106 44.353Q252.121 44.528 251.778 45.467L249.384 52.019Q249.041 52.958 248.866 51.974L247.647 45.106Q247.472 44.121 246.533 43.778L239.981 41.384Q239.042 41.041 240.026 40.866L246.894 39.647Q247.879 39.472 248.222 38.533Z" fill="#6EE7B7"/><path d="M407.213 90.471Q407.909 89.752 407.668 90.723L406.971 93.533Q406.73 94.504 407.449 95.199L409.529 97.213Q410.248 97.909 409.277 97.668L406.467 96.971Q405.496 96.73 404.801 97.449L402.787 99.529Q402.091 100.248 402.332 99.277L403.029 96.467Q403.27 95.496 402.551 94.801L400.471 92.787Q399.752 92.091 400.723 92.332L403.533 93.029Q404.504 93.27 405.199 92.551Z" fill="#6EE7B7"/>
+<circle cx="170" cy="120" r="42" fill="#FDE68A"/><circle cx="330" cy="120" r="42" fill="#FDE68A"/><circle cx="170" cy="120" r="22" fill="#6EE7B7"/><circle cx="330" cy="120" r="22" fill="#6EE7B7"/>
+<g mask="url(#mask_g042_circle)">
+<rect x="-50" y="230" width="600" height="300" fill="#34D399"/><rect x="-74" y="240" width="18" height="300" fill="#059669"/><rect x="-10" y="240" width="18" height="300" fill="#059669"/><rect x="54" y="240" width="18" height="300" fill="#059669"/><rect x="118" y="240" width="18" height="300" fill="#059669"/><rect x="182" y="240" width="18" height="300" fill="#059669"/><rect x="246" y="240" width="18" height="300" fill="#059669"/><rect x="310" y="240" width="18" height="300" fill="#059669"/><rect x="374" y="240" width="18" height="300" fill="#059669"/><rect x="438" y="240" width="18" height="300" fill="#059669"/><rect x="502" y="240" width="18" height="300" fill="#059669"/><rect x="-10" y="250" width="520" height="16" fill="#059669"/><rect x="-10" y="300" width="520" height="16" fill="#059669"/><rect x="-10" y="350" width="520" height="16" fill="#059669"/><rect x="-10" y="400" width="520" height="16" fill="#059669"/><rect x="-10" y="450" width="520" height="16" fill="#059669"/><rect x="-10" y="500" width="520" height="16" fill="#059669"/>
+</g>
+<circle cx="250" cy="215" r="115" fill="#FDE68A"/>
+
+<ellipse cx="205" cy="205" rx="36" ry="44" fill="white"/><circle cx="214" cy="214" r="20" fill="#064E3B"/><circle cx="295" cy="188" r="22" fill="white"/><circle cx="298" cy="192" r="11" fill="#064E3B"/>
+<path d="M205 292 Q225 310 245 292" stroke="#064E3B" stroke-width="10" stroke-linecap="round" fill="none"/>
+
+</g>
+<defs>
+<clipPath id="clip_4cdd0_circle"><circle cx="250" cy="250" r="250"/></clipPath>
+<mask id="mask_g042_circle" style="mask-type:alpha" maskUnits="userSpaceOnUse"><path d="M110 500 L160 350 Q250 330 340 350 L390 500Z" fill="white"/></mask>
+</defs>
+</svg>

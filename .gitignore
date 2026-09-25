@@ -1,0 +1,14 @@
+# Node dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Cloudflare Wrangler build & dev outputs
+.wrangler/
+.dev.vars
+
+# Operating System files
+.DS_Store
+Thumbs.db

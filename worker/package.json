@@ -1,0 +1,19 @@
+{
+  "name": "reicon-avatars-api",
+  "version": "1.0.0",
+  "description": "Free, open-source seed-based avatar API hosted on Cloudflare Workers",
+  "homepage": "https://github.com/dqev/reicon-avatars",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dqev/reicon-avatars.git"
+  },
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy"
+  },
+  "devDependencies": {
+    "wrangler": "^4.140.0"
+  }
+}
