@@ -1,6 +1,6 @@
 # Ugly Avatars for your Beautiful UI
 
-![Ugly Avatars Banner](assets/meta.png)
+![Ugly Avatars Banner](assets/og.png)
 
 [![Edge Network](https://img.shields.io/badge/Edge%20Network-Cloudflare%20Workers-orange)](https://avatars.reicon.dev)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
