@@ -56,7 +56,7 @@ Control outer geometry using the `shape` query parameter. Choose between `circle
 
 ## Seed Determinism
 
-Pass any string, email, or user ID as a seed. The generator produces a 100% unique avatar with consistent palette, torso pattern, and expression every single time.
+Pass any string, email, or user ID as a seed. The generator produces a 100% unique avatar with consistent palette, torso pattern, and expression every single time. Seeds are case-insensitive, so `dev`, `DEV`, and `Dev` resolve to the same avatar.
 
 | `seed="user_101"` | `seed="octocat"` | `seed="antigravity"` |
 | :---: | :---: | :---: |

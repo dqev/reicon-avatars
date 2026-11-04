@@ -88,6 +88,12 @@ function normalizeSize(size) {
   return Math.min(Math.max(value, MIN_SIZE), MAX_SIZE);
 }
 
+// Seeds are case-insensitive so "dev", "DEV", and "dEv" resolve to one avatar.
+function normalizeSeed(seed) {
+  const value = seed == null ? '' : String(seed);
+  return value.trim().toLowerCase() || 'avatar';
+}
+
 function starPath(cx, cy, rOut, rIn, n, rot = 0, roundR = 0) {
   const pts = [];
   for (let i = 0; i < n * 2; i++) {
@@ -520,7 +526,7 @@ function svg(inner, defs = "", cid = "clip_default", seed = "", shape = "circle"
 function generateAvatar(seed = 'avatar', shape = 'circle', size = DEFAULT_SIZE) {
   const safeShape = normalizeShape(shape);
   const safeSize = normalizeSize(size);
-  const safeSeed = seed == null ? 'avatar' : seed;
+  const safeSeed = normalizeSeed(seed);
   const rnd = createRnd(safeSeed);
   
   // Pick composition properties deterministically
