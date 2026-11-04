@@ -4,13 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Docs — Ugly Avatars for your Beautiful UI</title>
+    <title>Docs - Ugly Avatars for your Beautiful UI</title>
     <meta name="description"
         content="Ugly avatars for your beautiful UI. Generate unique, deterministic vector avatars for your web apps and users.">
     <meta name="keywords"
         content="ugly avatars, vector avatars, SVG avatars, generative avatars, profile pictures, avatar generator, reicon avatars">
     <meta name="robots" content="index, follow">
     <meta name="theme-color" content="#0d0d0d">
+    <meta name="color-scheme" content="dark">
     <link rel="canonical" href="https://avatars.reicon.dev/docs/">
     <link rel="manifest" href="/assets/site.webmanifest">
     <link rel="icon" type="image/png" sizes="48x48" href="/assets/icon-48.png">
@@ -20,15 +21,17 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://avatars.reicon.dev/docs/">
-    <meta property="og:title" content="Docs — Ugly Avatars for your Beautiful UI">
-    <meta property="og:description" content="Ugly avatars for your beautiful UI. Generate unique, deterministic vector avatars for your web apps and users.">
+    <meta property="og:title" content="Docs - Ugly Avatars for your Beautiful UI">
+    <meta property="og:description"
+        content="Ugly avatars for your beautiful UI. Generate unique, deterministic vector avatars for your web apps and users.">
     <meta property="og:image" content="https://avatars.reicon.dev/assets/meta.png">
     <meta property="og:site_name" content="Ugly Avatars">
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Docs — Ugly Avatars for your Beautiful UI">
-    <meta name="twitter:description" content="Ugly avatars for your beautiful UI. Generate unique, deterministic vector avatars for your web apps and users.">
+    <meta name="twitter:title" content="Docs - Ugly Avatars for your Beautiful UI">
+    <meta name="twitter:description"
+        content="Ugly avatars for your beautiful UI. Generate unique, deterministic vector avatars for your web apps and users.">
     <meta name="twitter:image" content="https://avatars.reicon.dev/assets/meta.png">
 
     <!-- Structured Data (JSON-LD) -->
@@ -36,7 +39,7 @@
     {
       "@context": "https://schema.org",
       "@type": "TechArticle",
-      "headline": "Docs — Ugly Avatars for your Beautiful UI",
+      "headline": "Docs - Ugly Avatars for your Beautiful UI",
       "description": "Ugly avatars for your beautiful UI. Generate unique, deterministic vector avatars for your web apps and users.",
       "url": "https://avatars.reicon.dev/docs/"
     }
@@ -54,7 +57,7 @@
             --surface-3: #262626;
             --text: #ffffff;
             --text-alt: #999999;
-            --text-muted: #555555;
+            --text-muted: #8a8a8a;
             --accent: #3b82f6;
             --keyword: #c678dd;
             --string: #98c379;
@@ -69,8 +72,10 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        button:focus, a:focus {
-            outline: none;
+        button:focus-visible,
+        a:focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: 2px;
         }
 
         html {
@@ -116,10 +121,21 @@
             background: var(--surface-1);
         }
 
-        .menu-icon-svg { display: block; }
-        .close-icon-svg { display: none; }
-        .mobile-menu-btn.is-open .menu-icon-svg { display: none; }
-        .mobile-menu-btn.is-open .close-icon-svg { display: block; }
+        .menu-icon-svg {
+            display: block;
+        }
+
+        .close-icon-svg {
+            display: none;
+        }
+
+        .mobile-menu-btn.is-open .menu-icon-svg {
+            display: none;
+        }
+
+        .mobile-menu-btn.is-open .close-icon-svg {
+            display: block;
+        }
 
         .mobile-dropdown {
             display: none;
@@ -584,6 +600,7 @@
                 gap: 20px;
                 padding: 24px 16px;
             }
+
             .preview-arrow svg {
                 transform: rotate(90deg);
             }
@@ -686,8 +703,15 @@
         }
 
         @keyframes popIn {
-            0% { transform: scale(0.5); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
+            0% {
+                transform: scale(0.5);
+                opacity: 0;
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
         }
     </style>
 </head>
@@ -707,18 +731,24 @@
         <div class="nav-actions">
             <a href="https://github.com/dqev/reicon-avatars" target="_blank" rel="noopener" class="nav-btn">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                    <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+                    <path fill-rule="evenodd" clip-rule="evenodd"
+                        d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
                 </svg>
                 GitHub
             </a>
         </div>
 
         <!-- Mobile Menu Toggle Button -->
-        <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle Navigation Menu">
-            <svg class="menu-icon-svg" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg" width="22" height="22">
-                <path d="M10.666666666666666 12v1.3333333333333333H3.333333333333333v-1.3333333333333333h7.333333333333333Zm3.333333333333333 -4.666666666666666v1.3333333333333333H2v-1.3333333333333333h12Zm-1.3333333333333333 -4.666666666666666v1.3333333333333333H5.333333333333333V2.6666666666666665h7.333333333333333Z"></path>
+        <button class="mobile-menu-btn" id="mobileMenuBtn" type="button" aria-label="Toggle Navigation Menu"
+            aria-controls="mobileDropdown" aria-expanded="false">
+            <svg class="menu-icon-svg" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg"
+                width="22" height="22">
+                <path
+                    d="M10.666666666666666 12v1.3333333333333333H3.333333333333333v-1.3333333333333333h7.333333333333333Zm3.333333333333333 -4.666666666666666v1.3333333333333333H2v-1.3333333333333333h12Zm-1.3333333333333333 -4.666666666666666v1.3333333333333333H5.333333333333333V2.6666666666666665h7.333333333333333Z">
+                </path>
             </svg>
-            <svg class="close-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" xmlns="http://www.w3.org/2000/svg" width="22" height="22">
+            <svg class="close-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" xmlns="http://www.w3.org/2000/svg" width="22" height="22">
                 <line x1="18" y1="6" x2="6" y2="18"></line>
                 <line x1="6" y1="6" x2="18" y2="18"></line>
             </svg>
@@ -730,7 +760,8 @@
             <a href="/docs/" class="mobile-dropdown-link">Docs</a>
             <a href="https://github.com/dqev/reicon-avatars" target="_blank" rel="noopener" class="mobile-dropdown-btn">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                    <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+                    <path fill-rule="evenodd" clip-rule="evenodd"
+                        d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
                 </svg>
                 GitHub
             </a>
@@ -743,18 +774,20 @@
             <h1 class="docs-hero-title">Ugly Avatars API &amp; Documentation</h1>
             <p class="intro-lead">
                 A deterministic vector avatar for any seed, rendered on demand via <code
-                    class="inline-code">&lt;svg&gt;</code>. The same seed always yields the same avatar, with no stored images and no network
+                    class="inline-code">&lt;svg&gt;</code>. The same seed always yields the same avatar, with no stored
+                images and no network
                 database. Self-contained: the engine is edge-native.
             </p>
 
             <!-- Quickstart Section -->
             <section id="quickstart">
                 <h2 class="section-title">Quickstart</h2>
-                <p class="section-desc">Embed generative avatars directly into HTML, React, or any framework using simple image tags.</p>
+                <p class="section-desc">Embed generative avatars directly into HTML, React, or any framework using
+                    simple image tags.</p>
 
                 <div class="code-box" data-squircle-radius="14" data-squircle-smoothing="60">
-                    <button class="copy-icon-btn" id="btnCopyQuickstart" title="Copy Code"
-                        style="position: absolute; right: 16px; top: 16px;">
+                    <button class="copy-icon-btn" id="btnCopyQuickstart" type="button" title="Copy Code"
+                        aria-label="Copy quickstart snippet" style="position: absolute; right: 16px; top: 16px;">
                         <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
                             <path fill-rule="evenodd" clip-rule="evenodd"
                                 d="M15 1.25H10.9436C9.10583 1.24998 7.65019 1.24997 6.51098 1.40314C5.33856 1.56076 4.38961 1.89288 3.64124 2.64124C2.89288 3.38961 2.56076 4.33856 2.40314 5.51098C2.24997 6.65019 2.24998 8.10582 2.25 9.94357V16C2.25 17.8722 3.62205 19.424 5.41551 19.7047C5.55348 20.4687 5.81753 21.1208 6.34835 21.6517C6.95027 22.2536 7.70814 22.5125 8.60825 22.6335C9.47522 22.75 10.5775 22.75 11.9451 22.75H15.0549C16.4225 22.75 17.5248 22.75 18.3918 22.6335C19.2919 22.5125 20.0497 22.2536 20.6517 21.6517C21.2536 21.0497 21.5125 20.2919 21.6335 19.3918C21.75 18.5248 21.75 17.4225 21.75 16.0549V10.9451C21.75 9.57754 21.75 8.47522 21.6335 7.60825C21.5125 6.70814 21.2536 5.95027 20.6517 5.34835C20.1208 4.81753 19.4687 4.55348 18.7047 4.41551C18.424 2.62205 16.8722 1.25 15 1.25ZM17.1293 4.27117C16.8265 3.38623 15.9876 2.75 15 2.75H11C9.09318 2.75 7.73851 2.75159 6.71085 2.88976C5.70476 3.02502 5.12511 3.27869 4.7019 3.7019C4.27869 4.12511 4.02502 4.70476 3.88976 5.71085C3.75159 6.73851 3.75 8.09318 3.75 10V16C3.75 16.9876 4.38624 17.8265 5.27117 18.1293C5.24998 17.5194 5.24999 16.8297 5.25 16.0549V10.9451C5.24998 9.57754 5.24996 8.47522 5.36652 7.60825C5.48754 6.70814 5.74643 5.95027 6.34835 5.34835C6.95027 4.74643 7.70814 4.48754 8.60825 4.36652C9.47522 4.24996 10.5775 4.24998 11.9451 4.25H15.0549C15.8297 4.24999 16.5194 4.24998 17.1293 4.27117ZM7.40901 6.40901C7.68577 6.13225 8.07435 5.9518 8.80812 5.85315C9.56347 5.75159 10.5646 5.75 12 5.75H15C16.4354 5.75 17.4365 5.75159 18.1919 5.85315C18.9257 5.9518 19.3142 6.13225 19.591 6.40901C19.8678 6.68577 20.0482 7.07435 20.1469 7.80812C20.2484 8.56347 20.25 9.56458 20.25 11V16C20.25 17.4354 20.2484 18.4365 20.1469 19.1919C20.0482 19.9257 19.8678 20.3142 19.591 20.591C19.3142 20.8678 18.9257 20.8678 18.1919 21.1469C17.4365 21.2484 16.4354 21.25 15 21.25H12C10.5646 21.25 9.56347 21.2484 8.80812 21.1469C8.07435 21.0482 7.68577 20.8678 7.40901 20.591C7.13225 20.3142 6.9518 19.9257 6.85315 19.1919C6.75159 18.4365 6.75 17.4354 6.75 16V11C6.75 9.56458 6.75159 8.56347 6.85315 7.80812C6.9518 7.07435 7.13225 6.68577 7.40901 6.40901Z"
@@ -771,7 +804,8 @@
                         <span class="preview-label">/v1/svg/alex?shape=squircle</span>
                     </div>
                     <div class="preview-arrow">
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <line x1="5" y1="12" x2="19" y2="12"></line>
                             <polyline points="12 5 19 12 12 19"></polyline>
                         </svg>
@@ -786,24 +820,27 @@
             <!-- API Endpoints Section -->
             <section id="endpoints">
                 <h2 class="section-title">API Endpoints</h2>
-                <p class="section-desc">Consume vector or rasterized avatars via HTTP GET requests on our global edge network (<code class="inline-code">https://avatars.reicon.dev</code>).</p>
+                <p class="section-desc">Consume vector SVG avatars or JSON payloads via HTTP GET requests on our global
+                    edge network (<code class="inline-code">https://avatars.reicon.dev</code>).</p>
 
                 <div class="code-box" data-squircle-radius="14" data-squircle-smoothing="60">
-                    <button class="copy-icon-btn" id="btnCopyEndpoints" title="Copy Code"
-                        style="position: absolute; right: 16px; top: 16px;">
+                    <button class="copy-icon-btn" id="btnCopyEndpoints" type="button" title="Copy Code"
+                        aria-label="Copy endpoint examples" style="position: absolute; right: 16px; top: 16px;">
                         <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
                             <path fill-rule="evenodd" clip-rule="evenodd"
                                 d="M15 1.25H10.9436C9.10583 1.24998 7.65019 1.24997 6.51098 1.40314C5.33856 1.56076 4.38961 1.89288 3.64124 2.64124C2.89288 3.38961 2.56076 4.33856 2.40314 5.51098C2.24997 6.65019 2.24998 8.10582 2.25 9.94357V16C2.25 17.8722 3.62205 19.424 5.41551 19.7047C5.55348 20.4687 5.81753 21.1208 6.34835 21.6517C6.95027 22.2536 7.70814 22.5125 8.60825 22.6335C9.47522 22.75 10.5775 22.75 11.9451 22.75H15.0549C16.4225 22.75 17.5248 22.75 18.3918 22.6335C19.2919 22.5125 20.0497 22.2536 20.6517 21.6517C21.2536 21.0497 21.5125 20.2919 21.6335 19.3918C21.75 18.5248 21.75 17.4225 21.75 16.0549V10.9451C21.75 9.57754 21.75 8.47522 21.6335 7.60825C21.5125 6.70814 21.2536 5.95027 20.6517 5.34835C20.1208 4.81753 19.4687 4.55348 18.7047 4.41551C18.424 2.62205 16.8722 1.25 15 1.25ZM17.1293 4.27117C16.8265 3.38623 15.9876 2.75 15 2.75H11C9.09318 2.75 7.73851 2.75159 6.71085 2.88976C5.70476 3.02502 5.12511 3.27869 4.7019 3.7019C4.27869 4.12511 4.02502 4.70476 3.88976 5.71085C3.75159 6.73851 3.75 8.09318 3.75 10V16C3.75 16.9876 4.38624 17.8265 5.27117 18.1293C5.24998 17.5194 5.24999 16.8297 5.25 16.0549V10.9451C5.24998 9.57754 5.24996 8.47522 5.36652 7.60825C5.48754 6.70814 5.74643 5.95027 6.34835 5.34835C6.95027 4.74643 7.70814 4.48754 8.60825 4.36652C9.47522 4.24996 10.5775 4.24998 11.9451 4.25H15.0549C15.8297 4.24999 16.5194 4.24998 17.1293 4.27117ZM7.40901 6.40901C7.68577 6.13225 8.07435 5.9518 8.80812 5.85315C9.56347 5.75159 10.5646 5.75 12 5.75H15C16.4354 5.75 17.4365 5.75159 18.1919 5.85315C18.9257 5.9518 19.3142 6.13225 19.591 6.40901C19.8678 6.68577 20.0482 7.07435 20.1469 7.80812C20.2484 8.56347 20.25 9.56458 20.25 11V16C20.25 17.4354 20.2484 18.4365 20.1469 19.1919C20.0482 19.9257 19.8678 20.3142 19.591 20.591C19.3142 20.8678 18.9257 20.8678 18.1919 21.1469C17.4365 21.2484 16.4354 21.25 15 21.25H12C10.5646 21.25 9.56347 21.2484 8.80812 21.1469C8.07435 21.0482 7.68577 20.8678 7.40901 20.591C7.13225 20.3142 6.9518 19.9257 6.85315 19.1919C6.75159 18.4365 6.75 17.4354 6.75 16V11C6.75 9.56458 6.75159 8.56347 6.85315 7.80812C6.9518 7.07435 7.13225 6.68577 7.40901 6.40901Z"
                                 fill="currentColor"></path>
                         </svg>
                     </button>
-                    
+
                     <div class="api-endpoint" data-squircle-radius="8" data-squircle-smoothing="60">
                         <span class="method get">GET</span>
-                        <span class="url">https://avatars.reicon.dev/v1/svg/<span class="param">{seed}</span>?shape=square|circle|squircle&amp;size=500</span>
+                        <span class="url">https://avatars.reicon.dev/v1/svg/<span
+                                class="param">{seed}</span>?shape=square|circle|squircle&amp;size=500</span>
                     </div>
-                    
-                    <div class="api-endpoint" data-squircle-radius="8" data-squircle-smoothing="60" style="margin-bottom: 0;">
+
+                    <div class="api-endpoint" data-squircle-radius="8" data-squircle-smoothing="60"
+                        style="margin-bottom: 0;">
                         <span class="method get">GET</span>
                         <span class="url">https://avatars.reicon.dev/v1/json/<span class="param">{seed}</span></span>
                     </div>
@@ -831,19 +868,23 @@
                                     <td class="param-name">seed</td>
                                     <td>string</td>
                                     <td><code class="inline-code">avatar</code></td>
-                                    <td>Path parameter. Any string or ID used for 100% deterministic avatar generation.</td>
+                                    <td>Path parameter. Any string or ID used for 100% deterministic avatar generation.
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td class="param-name">shape</td>
                                     <td>string</td>
                                     <td><code class="inline-code">square</code></td>
-                                    <td>Outer clipping mask. Options: <code class="inline-code">square</code>, <code class="inline-code">circle</code>, or <code class="inline-code">squircle</code>.</td>
+                                    <td>Outer clipping mask. Options: <code class="inline-code">square</code>, <code
+                                            class="inline-code">circle</code>, or <code
+                                            class="inline-code">squircle</code>.</td>
                                 </tr>
                                 <tr>
                                     <td class="param-name">size / width / height</td>
                                     <td>number</td>
                                     <td><code class="inline-code">500</code></td>
-                                    <td>Output resolution in pixels (e.g. <code class="inline-code">250</code>, <code class="inline-code">400</code>, <code class="inline-code">500</code>).</td>
+                                    <td>Output resolution in pixels (e.g. <code class="inline-code">250</code>, <code
+                                            class="inline-code">400</code>, <code class="inline-code">500</code>).</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -856,14 +897,19 @@
                 <h2 class="section-title">Rate Limits &amp; Caching</h2>
                 <p class="section-desc">
                     Edge requests are rate limited to <strong>100 requests per minute per IP</strong>.<br>
-                    Responses include rate limit diagnostic headers (<code class="inline-code">X-RateLimit-Limit</code>, <code class="inline-code">X-RateLimit-Remaining</code>, <code class="inline-code">X-RateLimit-Reset</code>) and immutable CDN caching (<code class="inline-code">Cache-Control: public, max-age=31536000, immutable</code>).
+                    Responses include rate limit diagnostic headers (<code class="inline-code">X-RateLimit-Limit</code>,
+                    <code class="inline-code">X-RateLimit-Remaining</code>, <code
+                        class="inline-code">X-RateLimit-Reset</code>) and immutable CDN caching (<code
+                        class="inline-code">Cache-Control: public, max-age=31536000, immutable</code>).
                 </p>
             </section>
 
             <!-- Shape Masking Section -->
             <section id="shapes">
                 <h2 class="section-title">Shapes &amp; Clipping Masks</h2>
-                <p class="section-desc">Control outer geometry using the <code class="inline-code">shape</code> query parameter. Choose between <code class="inline-code">circle</code>, <code class="inline-code">squircle</code>, or <code class="inline-code">square</code>.</p>
+                <p class="section-desc">Control outer geometry using the <code class="inline-code">shape</code> query
+                    parameter. Choose between <code class="inline-code">circle</code>, <code
+                        class="inline-code">squircle</code>, or <code class="inline-code">square</code>.</p>
 
                 <div class="api-preview-box">
                     <div class="preview-card">
@@ -871,7 +917,8 @@
                         <span class="preview-label">shape="circle"</span>
                     </div>
                     <div class="preview-arrow">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <line x1="5" y1="12" x2="19" y2="12"></line>
                             <polyline points="12 5 19 12 12 19"></polyline>
                         </svg>
@@ -881,7 +928,8 @@
                         <span class="preview-label">shape="squircle"</span>
                     </div>
                     <div class="preview-arrow">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <line x1="5" y1="12" x2="19" y2="12"></line>
                             <polyline points="12 5 19 12 12 19"></polyline>
                         </svg>
@@ -896,7 +944,8 @@
             <!-- Seed Determinism Section -->
             <section id="seeds">
                 <h2 class="section-title">Seed Determinism</h2>
-                <p class="section-desc">Pass any string, email, or user ID as a seed. The generator produces a 100% unique avatar with consistent palette, torso pattern, and expression every single time.</p>
+                <p class="section-desc">Pass any string, email, or user ID as a seed. The generator produces a 100%
+                    unique avatar with consistent palette, torso pattern, and expression every single time.</p>
 
                 <div class="api-preview-box">
                     <div class="preview-card">
@@ -917,11 +966,12 @@
             <!-- Output Formats Section -->
             <section id="formats">
                 <h2 class="section-title">Formats (SVG, JSON)</h2>
-                <p class="section-desc">Vector SVG images for web apps, or structured JSON payloads with raw SVG markup.</p>
+                <p class="section-desc">Vector SVG images for web apps, or structured JSON payloads with raw SVG markup.
+                </p>
 
                 <div class="code-box" data-squircle-radius="14" data-squircle-smoothing="60">
-                    <button class="copy-icon-btn" id="btnCopyFormats" title="Copy Code"
-                        style="position: absolute; right: 16px; top: 16px;">
+                    <button class="copy-icon-btn" id="btnCopyFormats" type="button" title="Copy Code"
+                        aria-label="Copy JSON response example" style="position: absolute; right: 16px; top: 16px;">
                         <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
                             <path fill-rule="evenodd" clip-rule="evenodd"
                                 d="M15 1.25H10.9436C9.10583 1.24998 7.65019 1.24997 6.51098 1.40314C5.33856 1.56076 4.38961 1.89288 3.64124 2.64124C2.89288 3.38961 2.56076 4.33856 2.40314 5.51098C2.24997 6.65019 2.24998 8.10582 2.25 9.94357V16C2.25 17.8722 3.62205 19.424 5.41551 19.7047C5.55348 20.4687 5.81753 21.1208 6.34835 21.6517C6.95027 22.2536 7.70814 22.5125 8.60825 22.6335C9.47522 22.75 10.5775 22.75 11.9451 22.75H15.0549C16.4225 22.75 17.5248 22.75 18.3918 22.6335C19.2919 22.5125 20.0497 22.2536 20.6517 21.6517C21.2536 21.0497 21.5125 20.2919 21.6335 19.3918C21.75 18.5248 21.75 17.4225 21.75 16.0549V10.9451C21.75 9.57754 21.75 8.47522 21.6335 7.60825C21.5125 6.70814 21.5125 5.95027 20.6517 5.34835C20.1208 4.81753 19.4687 4.55348 18.7047 4.41551C18.424 2.62205 16.8722 1.25 15 1.25ZM17.1293 4.27117C16.8265 3.38623 15.9876 2.75 15 2.75H11C9.09318 2.75 7.73851 2.75159 6.71085 2.88976C5.70476 3.02502 5.12511 3.27869 4.7019 3.7019C4.27869 4.12511 4.02502 4.70476 3.88976 5.71085C3.75159 6.73851 3.75 8.09318 3.75 10V16C3.75 16.9876 4.38624 17.8265 5.27117 18.1293C5.24998 17.5194 5.24999 16.8297 5.25 16.0549V10.9451C5.24998 9.57754 5.24996 8.47522 5.36652 7.60825C5.48754 6.70814 5.74643 5.95027 6.34835 5.34835C6.95027 4.74643 7.70814 4.48754 8.60825 4.36652C9.47522 4.24996 10.5775 4.24998 11.9451 4.25H15.0549C15.8297 4.24999 16.5194 4.24998 17.1293 4.27117ZM7.40901 6.40901C7.68577 6.13225 8.07435 5.9518 8.80812 5.85315C9.56347 5.75159 10.5646 5.75 12 5.75H15C16.4354 5.75 17.4365 5.75159 18.1919 5.85315C18.9257 5.9518 19.3142 6.13225 19.591 6.40901C19.8678 6.68577 20.0482 7.07435 20.1469 7.80812C20.2484 8.56347 20.25 9.56458 20.25 11V16C20.25 17.4354 20.2484 18.4365 20.1469 19.1919C20.0482 19.9257 19.8678 20.3142 19.591 20.591C19.3142 20.8678 18.9257 20.8678 18.1919 21.1469C17.4365 21.2484 16.4354 21.25 15 21.25H12C10.5646 21.25 9.56347 21.2484 8.80812 21.1469C8.07435 21.0482 7.68577 20.8678 7.40901 20.591C7.13225 20.3142 6.9518 19.9257 6.85315 19.1919C6.75159 18.4365 6.75 17.4354 6.75 16V11C6.75 9.56458 6.75159 8.56347 6.85315 7.80812C6.9518 7.07435 7.13225 6.68577 7.40901 6.40901Z"

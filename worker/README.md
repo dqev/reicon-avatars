@@ -1,4 +1,4 @@
-# Reicon Avatars API — Cloudflare Worker
+# Reicon Avatars API - Cloudflare Worker
 
 > Global edge API for **Ugly Avatars for your Beautiful UI**.
 

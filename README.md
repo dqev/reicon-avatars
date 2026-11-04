@@ -44,7 +44,7 @@ Customize output shape, dimensions, and seed values via query parameters.
 | :--- | :--- | :--- | :--- |
 | `seed` | `string` | `avatar` | Path parameter. Any string, email, or user ID used for 100% deterministic avatar generation. |
 | `shape` | `string` | `square` | Outer clipping mask. Options: `square`, `circle`, or `squircle`. |
-| `size` / `width` / `height` | `number` | `500` | Output resolution in pixels (e.g. `250`, `400`, `500`). |
+| `size` / `width` / `height` | `number` | `500` | Output resolution in pixels, clamped to `16`–`2048` (e.g. `250`, `400`, `500`). |
 
 ## Shapes & Clipping Masks
 
@@ -83,6 +83,38 @@ Edge requests are rate limited to **100 requests per minute per IP**.
 
 - **Diagnostic Headers**: Responses include rate limit headers (`X-RateLimit-Limit`, `X-RateLimit-Remaining`, `X-RateLimit-Reset`).
 - **CDN Caching**: Immutable CDN caching (`Cache-Control: public, max-age=31536000, immutable`).
+
+## MCP Server
+
+The `mcp/` package exposes the generator to Model Context Protocol clients over stdio or HTTP.
+
+```bash
+cd mcp
+npm install
+node src/index.js                  # stdio (default)
+MCP_TRANSPORT=http PORT=3000 node src/index.js   # HTTP at /mcp, health at /health
+```
+
+Stdio client configuration:
+
+```json
+{
+  "mcpServers": {
+    "reicon-avatars": {
+      "command": "node",
+      "args": ["/absolute/path/to/reicon-avatars/mcp/src/index.js"]
+    }
+  }
+}
+```
+
+Available tools:
+
+- `generate_avatar` - generate SVG locally from `seed`, `shape`, and `size`.
+- `get_avatar_url` - return a hosted URL plus HTML and Markdown embed snippets.
+- `list_avatar_options` - list supported shapes, palettes, and size limits.
+
+HTTP mode runs stateless sessions, so each `POST /mcp` request can be handled independently.
 
 ## Deployment & Local Setup
 

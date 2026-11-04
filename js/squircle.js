@@ -74,10 +74,33 @@
     ].join(" ");
   }
 
+  const observers = new WeakMap();
+  const resizeHandlers = new WeakMap();
+
+  function cleanup(element) {
+    const observer = observers.get(element);
+    if (observer) {
+      observer.disconnect();
+      observers.delete(element);
+    }
+    const handler = resizeHandlers.get(element);
+    if (handler) {
+      window.removeEventListener("resize", handler);
+      resizeHandlers.delete(element);
+    }
+  }
+
   function applySmoothCorners(element, radius = 28, smoothing = 60) {
     if (!element) return null;
+
+    // Avoid stacking observers when the same element is initialized twice.
+    cleanup(element);
+
+    const safeRadius = Math.max(0, Number(radius) || 0);
+    const safeSmoothing = Math.min(Math.max(Number(smoothing) || 0, 0), 100);
+
     if (typeof CSS !== "undefined" && !CSS.supports("clip-path", 'path("M0 0H1V1H0Z")')) {
-      element.style.borderRadius = radius + "px";
+      element.style.borderRadius = safeRadius + "px";
       return null;
     }
 
@@ -89,8 +112,8 @@
       const pathData = squirclePath({
         width,
         height,
-        radius,
-        smoothing: Math.min(Math.max(smoothing, 0), 100) / 100,
+        radius: safeRadius,
+        smoothing: safeSmoothing / 100,
       });
 
       element.style.clipPath = `path("${pathData}")`;
@@ -101,16 +124,20 @@
     if (window.ResizeObserver) {
       const observer = new ResizeObserver(update);
       observer.observe(element);
+      observers.set(element, observer);
     } else {
       window.addEventListener("resize", update);
+      resizeHandlers.set(element, update);
     }
     update();
   }
 
   function initSquircles() {
     document.querySelectorAll("[data-squircle-radius]").forEach((el) => {
-      const radius = parseFloat(el.getAttribute("data-squircle-radius")) || 28;
-      const smoothing = parseFloat(el.getAttribute("data-squircle-smoothing")) || 60;
+      const parsedRadius = parseFloat(el.getAttribute("data-squircle-radius"));
+      const parsedSmoothing = parseFloat(el.getAttribute("data-squircle-smoothing"));
+      const radius = Number.isFinite(parsedRadius) ? parsedRadius : 28;
+      const smoothing = Number.isFinite(parsedSmoothing) ? parsedSmoothing : 60;
       applySmoothCorners(el, radius, smoothing);
     });
   }

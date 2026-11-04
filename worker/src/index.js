@@ -1,12 +1,16 @@
-import { generateAvatar, PALETTES } from './avatar.js';
+import { generateAvatar } from './avatar.js';
 
 // In-memory IP rate limiter map for Cloudflare Worker instance
 const ipRateMap = new Map();
 const RATE_LIMIT_WINDOW_MS = 60 * 1000; // 1 minute
 const DEFAULT_LIMIT = 100; // 100 requests / minute per IP
+const MAX_SEED_LENGTH = 512;
+const CACHE_IMMUTABLE = 'public, max-age=31536000, immutable';
+const CACHE_NO_STORE = 'no-store';
 
 /**
- * Perform sliding window rate limiting by client IP
+ * Perform fixed-window rate limiting by client IP.
+ * Note: this is per Worker isolate and is a lightweight best-effort guard.
  */
 function checkRateLimit(clientIp, limit = DEFAULT_LIMIT) {
   const now = Date.now();
@@ -47,16 +51,21 @@ function normalizeUrl(rawUrl) {
 }
 
 /**
- * Standard CORS & Cache headers with optional Content-Disposition filename
+ * Standard CORS & Cache headers with optional Content-Disposition filename.
+ * Errors must never be cached immutably, so callers pass CACHE_NO_STORE.
  */
-function getResponseHeaders(contentType, extraHeaders = {}, filename = null) {
+function getResponseHeaders(contentType, extraHeaders = {}, filename = null, cacheControl = CACHE_IMMUTABLE) {
   const headers = {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Methods': 'GET, HEAD, OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type',
+    'Access-Control-Max-Age': '86400',
+    'Access-Control-Expose-Headers': 'X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-Cache-Status, Content-Disposition',
     'Content-Type': contentType,
-    'Cache-Control': 'public, max-age=31536000, immutable',
-    'CDN-Cache-Control': 'public, max-age=31536000, immutable',
+    'X-Content-Type-Options': 'nosniff',
+    'Referrer-Policy': 'no-referrer',
+    'Cache-Control': cacheControl,
+    'CDN-Cache-Control': cacheControl,
     ...extraHeaders
   };
 
@@ -67,20 +76,41 @@ function getResponseHeaders(contentType, extraHeaders = {}, filename = null) {
   return headers;
 }
 
+/**
+ * Safely parse the configured rate limit, falling back to the default.
+ */
+function resolveLimit(env) {
+  const raw = env?.MAX_REQUESTS_PER_MINUTE;
+  if (raw == null || raw === '') return DEFAULT_LIMIT;
+  const parsed = Number.parseInt(raw, 10);
+  if (!Number.isFinite(parsed) || parsed <= 0) return DEFAULT_LIMIT;
+  return Math.min(parsed, 100000);
+}
+
 export default {
   async fetch(request, env, ctx) {
     // 1. Handle CORS Preflight OPTIONS
     if (request.method === 'OPTIONS') {
       return new Response(null, {
         status: 204,
-        headers: getResponseHeaders('text/plain')
+        headers: getResponseHeaders('text/plain', { Allow: 'GET, HEAD, OPTIONS' }, null, CACHE_NO_STORE)
+      });
+    }
+
+    if (request.method !== 'GET' && request.method !== 'HEAD') {
+      return new Response(JSON.stringify({
+        error: 'Method not allowed',
+        message: 'Use GET or HEAD.'
+      }), {
+        status: 405,
+        headers: getResponseHeaders('application/json', { Allow: 'GET, HEAD, OPTIONS' }, null, CACHE_NO_STORE)
       });
     }
 
     const clientIp = request.headers.get('cf-connecting-ip') || '127.0.0.1';
 
     // 2. Rate Limiting Check
-    const limitSetting = env?.MAX_REQUESTS_PER_MINUTE ? parseInt(env.MAX_REQUESTS_PER_MINUTE, 10) : DEFAULT_LIMIT;
+    const limitSetting = resolveLimit(env);
     const rateLimit = checkRateLimit(clientIp, limitSetting);
     const rateHeaders = {
       'X-RateLimit-Limit': String(rateLimit.limit),
@@ -98,7 +128,7 @@ export default {
         headers: getResponseHeaders('application/json', {
           ...rateHeaders,
           'Retry-After': String(rateLimit.resetSec)
-        })
+        }, null, CACHE_NO_STORE)
       });
     }
 
@@ -106,13 +136,14 @@ export default {
     const normalizedUrl = normalizeUrl(request.url);
     const pathSegments = normalizedUrl.pathname.split('/').filter(Boolean); // e.g. ['v1', 'svg', 'john']
 
-    // Cloudflare Edge Cache API Lookup
+    // Cloudflare Edge Cache API Lookup (cache GET responses only)
     const cache = typeof caches !== 'undefined' ? caches.default : null;
+    const canCache = request.method === 'GET';
     const cacheKey = new Request(normalizedUrl.toString(), request);
 
-    if (cache) {
+    if (cache && canCache) {
       try {
-        let cachedResponse = await cache.match(cacheKey);
+        const cachedResponse = await cache.match(cacheKey);
         if (cachedResponse) {
           const newHeaders = new Headers(cachedResponse.headers);
           Object.entries(rateHeaders).forEach(([k, v]) => newHeaders.set(k, v));
@@ -137,7 +168,8 @@ export default {
     const rawSize = normalizedUrl.searchParams.get('size') || normalizedUrl.searchParams.get('width') || normalizedUrl.searchParams.get('height') || '500';
     let querySize = parseInt(rawSize, 10);
     if (isNaN(querySize) || querySize <= 0) querySize = 500;
-    if (querySize > 2000) querySize = 2000;
+    if (querySize < 16) querySize = 16;
+    if (querySize > 2048) querySize = 2048;
 
     // Default Landing / Root Health
     if (pathSegments.length === 0 || pathSegments[0] !== 'v1') {
@@ -152,12 +184,36 @@ export default {
         documentation: "https://github.com/dqev/reicon-avatars"
       }, null, 2), {
         status: 200,
-        headers: getResponseHeaders('application/json', rateHeaders)
+        headers: getResponseHeaders('application/json', rateHeaders, null, CACHE_NO_STORE)
       });
     }
 
     const [, format, ...seedParts] = pathSegments;
-    const seed = seedParts.join('/') || 'avatar';
+    const rawSeed = seedParts.join('/');
+
+    let seed;
+    try {
+      seed = rawSeed ? decodeURIComponent(rawSeed) : 'avatar';
+    } catch {
+      return new Response(JSON.stringify({
+        error: 'Invalid seed encoding',
+        message: 'Seed path contains malformed percent-encoding.'
+      }), {
+        status: 400,
+        headers: getResponseHeaders('application/json', rateHeaders, null, CACHE_NO_STORE)
+      });
+    }
+
+    if (seed.length > MAX_SEED_LENGTH) {
+      return new Response(JSON.stringify({
+        error: 'Seed too long',
+        message: `Seed must be ${MAX_SEED_LENGTH} characters or fewer.`
+      }), {
+        status: 414,
+        headers: getResponseHeaders('application/json', rateHeaders, null, CACHE_NO_STORE)
+      });
+    }
+
     const safeSeedFilename = encodeURIComponent(seed);
 
     try {
@@ -168,7 +224,11 @@ export default {
           status: 200,
           headers: getResponseHeaders(
             'image/svg+xml; charset=utf-8',
-            { ...rateHeaders, 'X-Cache-Status': 'MISS' },
+            {
+              ...rateHeaders,
+              'X-Cache-Status': 'MISS',
+              'Content-Security-Policy': "default-src 'none'; style-src 'unsafe-inline'"
+            },
             `${safeSeedFilename}.svg`
           )
         });
@@ -190,12 +250,16 @@ export default {
       } else {
         return new Response(JSON.stringify({ error: `Unsupported format '${format}'. Supported: svg, json` }), {
           status: 400,
-          headers: getResponseHeaders('application/json', rateHeaders)
+          headers: getResponseHeaders('application/json', rateHeaders, null, CACHE_NO_STORE)
         });
       }
 
+      if (request.method === 'HEAD') {
+        return new Response(null, { status: response.status, headers: response.headers });
+      }
+
       // Store in Cloudflare Cache asynchronously if cache is available and status is OK
-      if (cache && response.status === 200 && ctx?.waitUntil) {
+      if (cache && canCache && response.status === 200 && ctx?.waitUntil) {
         ctx.waitUntil(
           cache.put(cacheKey, response.clone()).catch(err => console.warn('Cache put error:', err))
         );
@@ -203,9 +267,10 @@ export default {
       return response;
 
     } catch (err) {
-      return new Response(JSON.stringify({ error: 'Internal avatar generation error', details: err.message }), {
+      console.error('Avatar generation failed:', err);
+      return new Response(JSON.stringify({ error: 'Internal avatar generation error' }), {
         status: 500,
-        headers: getResponseHeaders('application/json', rateHeaders)
+        headers: getResponseHeaders('application/json', rateHeaders, null, CACHE_NO_STORE)
       });
     }
   }

@@ -70,18 +70,29 @@ if (mobileMenuBtn && mobileDropdown) {
         e.stopPropagation();
         const isOpen = mobileDropdown.classList.toggle('is-open');
         mobileMenuBtn.classList.toggle('is-open', isOpen);
+        mobileMenuBtn.setAttribute('aria-expanded', String(isOpen));
     });
 
     document.addEventListener('click', (e) => {
         if (!mobileDropdown.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
             mobileDropdown.classList.remove('is-open');
             mobileMenuBtn.classList.remove('is-open');
+            mobileMenuBtn.setAttribute('aria-expanded', 'false');
+        }
+    });
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && mobileDropdown.classList.contains('is-open')) {
+            mobileDropdown.classList.remove('is-open');
+            mobileMenuBtn.classList.remove('is-open');
+            mobileMenuBtn.setAttribute('aria-expanded', 'false');
+            mobileMenuBtn.focus();
         }
     });
 }
 
 // Sidebar Table of Contents Scroll Observer
-document.addEventListener('DOMContentLoaded', () => {
+function initDocsPage() {
     const sections = document.querySelectorAll('main section[id]');
     const navLinks = document.querySelectorAll('.sidebar-nav a[href^="#"]');
 
@@ -153,11 +164,17 @@ document.addEventListener('DOMContentLoaded', () => {
             if (targetSection) {
                 setActiveLink(targetId);
                 targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                history.pushState(null, null, `#${targetId}`);
+                history.pushState(null, '', `#${targetId}`);
             }
         });
     });
-});
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initDocsPage);
+} else {
+    initDocsPage();
+}
 
 // Soft Copy Transition Feedback globally
 document.addEventListener('click', (e) => {

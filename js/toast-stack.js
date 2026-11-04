@@ -7,6 +7,9 @@
       toastStack = document.createElement("div");
       toastStack.id = "tstStack";
       toastStack.className = "tst-stack";
+      toastStack.setAttribute("role", "status");
+      toastStack.setAttribute("aria-live", "polite");
+      toastStack.setAttribute("aria-atomic", "false");
       document.body.appendChild(toastStack);
     }
     return toastStack;
@@ -41,18 +44,24 @@
     const el = document.createElement("div");
     el.className = "tst-item";
     el.innerHTML = `
-      <svg class="tst-check-icon" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <svg class="tst-check-icon" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
         <path d="M1.60416 8.80469L5.24999 11.8125L12.3958 2.1875" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
-      <span class="tst-text">${text}</span>
+      <span class="tst-text"></span>
     `;
+
+    // Use textContent so seed-derived messages can never inject markup.
+    const textEl = el.querySelector(".tst-text");
+    const message = String(text == null ? "" : text);
+    textEl.textContent = message;
+    el.title = message;
 
     el.style.transform = `translateX(-50%) translateY(16px) scale(0.9)`;
     el.style.opacity = `0`;
 
     container.appendChild(el);
 
-    const toastObj = { id, text, element: el };
+    const toastObj = { id, text: message, element: el, timer: null, dismissTimer: null };
     toasts.push(toastObj);
 
     if (toasts.length > MAX_TOASTS) {
@@ -64,12 +73,20 @@
       renderStack();
     });
 
-    setTimeout(() => {
+    toastObj.timer = setTimeout(() => {
       dismissToast(toastObj);
     }, TOAST_DURATION);
   }
 
   function dismissToast(toastObj) {
+    if (!toastObj || toastObj.dismissed) return;
+    toastObj.dismissed = true;
+
+    if (toastObj.timer) {
+      clearTimeout(toastObj.timer);
+      toastObj.timer = null;
+    }
+
     const idx = toasts.indexOf(toastObj);
     if (idx !== -1) {
       toasts.splice(idx, 1);
@@ -78,7 +95,7 @@
     toastObj.element.style.opacity = `0`;
     toastObj.element.style.transform = `translateX(-50%) translateY(-14px) scale(0.95)`;
 
-    setTimeout(() => {
+    toastObj.dismissTimer = setTimeout(() => {
       if (toastObj.element && toastObj.element.parentNode) {
         toastObj.element.parentNode.removeChild(toastObj.element);
       }

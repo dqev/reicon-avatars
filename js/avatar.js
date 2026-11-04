@@ -57,6 +57,37 @@ function f(v) {
   return Number(v.toFixed(3)).toString();
 }
 
+// XML escaping for user-controlled values (seed is reflected into <desc>)
+function escapeXml(value) {
+  let str = String(value);
+  if (typeof str.toWellFormed === 'function') str = str.toWellFormed();
+  return str
+    // XML 1.0 forbids most C0 control characters and lone surrogates.
+    .replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\uFFFE\uFFFF]/g, '\uFFFD')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&apos;');
+}
+
+const VALID_SHAPES = ['circle', 'squircle', 'square'];
+const DEFAULT_SIZE = 500;
+const MIN_SIZE = 16;
+const MAX_SIZE = 2048;
+const MAX_DESC_SEED_LENGTH = 280;
+
+function normalizeShape(shape) {
+  const value = String(shape || '').toLowerCase().trim();
+  return VALID_SHAPES.includes(value) ? value : 'circle';
+}
+
+function normalizeSize(size) {
+  const value = Math.round(Number(size));
+  if (!Number.isFinite(value) || value <= 0) return DEFAULT_SIZE;
+  return Math.min(Math.max(value, MIN_SIZE), MAX_SIZE);
+}
+
 function starPath(cx, cy, rOut, rIn, n, rot = 0, roundR = 0) {
   const pts = [];
   for (let i = 0; i < n * 2; i++) {
@@ -452,18 +483,27 @@ function generateBackgroundDecorations(palette, rnd) {
   return selected.join('');
 }
 
-function svg(inner, defs = "", cid = "clip_default", seed = "", shape = "circle") {
-  const cleanSeed = String(seed).trim();
-  const descTag = `<desc>This avatar is unique and created specifically for @${cleanSeed}.</desc>\n`;
+function svg(inner, defs = "", cid = "clip_default", seed = "", shape = "circle", size = DEFAULT_SIZE) {
+  const safeShape = normalizeShape(shape);
+  const safeSize = normalizeSize(size);
+  const cleanSeed = String(seed == null ? 'avatar' : seed);
+  let displaySeed = cleanSeed;
+  if (cleanSeed.length > MAX_DESC_SEED_LENGTH) {
+    displaySeed = cleanSeed.slice(0, MAX_DESC_SEED_LENGTH);
+    // Do not split a surrogate pair when truncating.
+    if (/[\uD800-\uDBFF]$/.test(displaySeed)) displaySeed = displaySeed.slice(0, -1);
+    displaySeed += '\u2026';
+  }
+  const descTag = `<desc>This avatar is unique and created specifically for @${escapeXml(displaySeed)}.</desc>\n`;
 
   let clipShapeHtml = `<circle cx="250" cy="250" r="250"/>`;
-  if (shape === 'square') {
+  if (safeShape === 'square') {
     clipShapeHtml = `<rect width="500" height="500"/>`;
-  } else if (shape === 'squircle') {
+  } else if (safeShape === 'squircle') {
     clipShapeHtml = `<path d="M 110 0 L 390 0 C 455 0 500 45 500 110 L 500 390 C 500 455 455 500 390 500 L 110 500 C 45 500 0 455 0 390 L 0 110 C 0 45 45 0 110 0 Z"/>`;
   }
 
-  return `<svg width="500" height="500" viewBox="0 0 500 500" fill="none" xmlns="http://www.w3.org/2000/svg">\n` +
+  return `<svg width="${safeSize}" height="${safeSize}" viewBox="0 0 500 500" fill="none" role="img" aria-label="Avatar for ${escapeXml(displaySeed)}" xmlns="http://www.w3.org/2000/svg">\n` +
          descTag +
          `<g clip-path="url(#${cid})">\n${inner}\n</g>\n` +
          `<defs>\n<clipPath id="${cid}">${clipShapeHtml}</clipPath>\n${defs}</defs>\n` +
@@ -474,10 +514,14 @@ function svg(inner, defs = "", cid = "clip_default", seed = "", shape = "circle"
  * Main Avatar Generator Function
  * @param {string|number} seed - Unique seed value
  * @param {string} shape - 'circle' | 'squircle' | 'square'
+ * @param {number} size - Output width/height in pixels (viewBox stays 500x500)
  * @returns {string} SVG string
  */
-function generateAvatar(seed = 'avatar', shape = 'circle') {
-  const rnd = createRnd(seed);
+function generateAvatar(seed = 'avatar', shape = 'circle', size = DEFAULT_SIZE) {
+  const safeShape = normalizeShape(shape);
+  const safeSize = normalizeSize(size);
+  const safeSeed = seed == null ? 'avatar' : seed;
+  const rnd = createRnd(safeSeed);
   
   // Pick composition properties deterministically
   const palette = rnd.pick(PALETTES);
@@ -489,8 +533,8 @@ function generateAvatar(seed = 'avatar', shape = 'circle') {
   const hasCheek = rnd() > 0.4;
   
   // Deterministic unique IDs for SVG masks & clips (append shape to prevent DOM collisions for same seed)
-  const clipId = nid('clip', rnd) + '_' + shape;
-  const maskId = nid('mask', rnd) + '_' + shape;
+  const clipId = nid('clip', rnd) + '_' + safeShape;
+  const maskId = nid('mask', rnd) + '_' + safeShape;
   
   // Layer order: Background -> Sparkles -> HeadBack -> BodyTorso -> HeadMain -> Cheeks -> Eyes -> Mouth -> HeadFront
   const backgroundLayer = bg(palette.bg);
@@ -520,14 +564,14 @@ function generateAvatar(seed = 'avatar', shape = 'circle') {
                     mouthHtml + '\n' +
                     headFront;
   
-  return svg(innerHtml, maskDef, clipId, seed, shape);
+  return svg(innerHtml, maskDef, clipId, safeSeed, safeShape, safeSize);
 }
 
 // Export for ES Module, CommonJS, and Browser global
 if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
-  module.exports = { generateAvatar, PALETTES };
+  module.exports = { generateAvatar, PALETTES, escapeXml, normalizeShape, normalizeSize };
 } else if (typeof define === 'function' && define.amd) {
-  define([], function() { return { generateAvatar, PALETTES }; });
+  define([], function() { return { generateAvatar, PALETTES, escapeXml, normalizeShape, normalizeSize }; });
 } else {
   if (typeof window !== 'undefined') {
     window.generateAvatar = generateAvatar;
