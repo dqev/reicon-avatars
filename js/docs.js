@@ -36,6 +36,80 @@ function fallbackCopyText(text, successMsg) {
     triggerToast(successMsg);
 }
 
+// Agent Prompt Loader & Copy
+let promptText = '';
+
+function loadPrompt() {
+    const pre = document.getElementById('promptContent');
+    fetch('/prompt.md', { cache: 'no-cache' })
+        .then((res) => {
+            if (!res.ok) throw new Error('HTTP ' + res.status);
+            return res.text();
+        })
+        .then((text) => {
+            promptText = text;
+            if (pre) pre.textContent = text;
+        })
+        .catch(() => {
+            if (pre) {
+                pre.textContent = '# prompt.md\n\nOpen https://avatars.reicon.dev/prompt.md to view and copy the full agent prompt.';
+            }
+        });
+}
+loadPrompt();
+
+function showPromptCopied(btn) {
+    if (!btn || btn.dataset.copied) return;
+    const label = btn.querySelector('span');
+    if (!label) return;
+
+    const originalLabel = label.textContent;
+    const icon = btn.querySelector('svg');
+    const originalIcon = icon ? icon.outerHTML : '';
+    const size = icon ? (icon.getAttribute('width') || '16') : '16';
+
+    btn.dataset.copied = 'true';
+    label.textContent = 'Copied';
+    label.style.color = '#10b981';
+
+    if (icon) {
+        icon.outerHTML = `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
+    }
+
+    setTimeout(() => {
+        label.textContent = originalLabel;
+        label.style.color = '';
+        const currentIcon = btn.querySelector('svg');
+        if (currentIcon && originalIcon) currentIcon.outerHTML = originalIcon;
+        delete btn.dataset.copied;
+    }, 2000);
+}
+
+function copyAgentPrompt(btn) {
+    if (promptText) {
+        copyTextToClipboard(promptText, 'Prompt copied!');
+        showPromptCopied(btn);
+        return;
+    }
+    fetch('/prompt.md')
+        .then((res) => res.text())
+        .then((text) => {
+            promptText = text;
+            copyTextToClipboard(promptText, 'Prompt copied!');
+            showPromptCopied(btn);
+        })
+        .catch(() => triggerToast('Open /prompt.md to copy the prompt'));
+}
+
+document.querySelectorAll('[data-copy-prompt]').forEach((btn) => {
+    btn.addEventListener('click', () => copyAgentPrompt(btn));
+});
+
+const btnCopyPrompt = document.getElementById('btnCopyPrompt');
+if (btnCopyPrompt) {
+    btnCopyPrompt.addEventListener('click', () => copyAgentPrompt(btnCopyPrompt));
+}
+
 // Copy Handlers
 const btnCopyQuickstart = document.getElementById('btnCopyQuickstart');
 if (btnCopyQuickstart) {
@@ -48,7 +122,7 @@ if (btnCopyQuickstart) {
 const btnCopyEndpoints = document.getElementById('btnCopyEndpoints');
 if (btnCopyEndpoints) {
     btnCopyEndpoints.addEventListener('click', () => {
-        const text = `SVG  https://avatars.reicon.dev/v1/svg/{seed}?shape=square|circle|squircle&size=500\nJSON https://avatars.reicon.dev/v1/json/{seed}`;
+        const text = `GET https://avatars.reicon.dev/v1/svg/{seed}?shape=square|circle|squircle&size=500\nGET https://avatars.reicon.dev/v1/json/{seed}`;
         copyTextToClipboard(text, 'Endpoints copied!');
     });
 }

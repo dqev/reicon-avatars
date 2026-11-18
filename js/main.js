@@ -121,6 +121,53 @@ if (cmdBar) {
   });
 }
 
+// Copy the agent prompt from prompt.md
+function showPromptCopied(btn) {
+  if (!btn || btn.dataset.copied) return;
+  const label = btn.querySelector('span');
+  if (!label) return;
+
+  const originalLabel = label.textContent;
+  const icon = btn.querySelector('svg');
+  const originalIcon = icon ? icon.outerHTML : '';
+  const size = icon ? (icon.getAttribute('width') || '16') : '16';
+
+  btn.dataset.copied = 'true';
+  label.textContent = 'Copied';
+  label.style.color = '#10b981';
+
+  if (icon) {
+    icon.outerHTML = `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
+  }
+
+  setTimeout(() => {
+    label.textContent = originalLabel;
+    label.style.color = '';
+    const currentIcon = btn.querySelector('svg');
+    if (currentIcon && originalIcon) currentIcon.outerHTML = originalIcon;
+    delete btn.dataset.copied;
+  }, 2000);
+}
+
+function copyAgentPrompt(btn) {
+  fetch('/prompt.md', { cache: 'no-cache' })
+    .then((res) => {
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      return res.text();
+    })
+    .then((text) => {
+      copyTextToClipboard(text, 'Prompt copied!');
+      showPromptCopied(btn);
+    })
+    .catch(() => {
+      showToast('Open /prompt.md to copy the prompt');
+    });
+}
+
+document.querySelectorAll('[data-copy-prompt]').forEach((btn) => {
+  btn.addEventListener('click', () => copyAgentPrompt(btn));
+});
+
 if (btnLinkSearch) {
   btnLinkSearch.addEventListener('click', (e) => {
     e.stopPropagation();
@@ -303,8 +350,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Soft Copy Transition Feedback globally
   document.addEventListener('click', (e) => {
-    const btn = e.target.closest('.copy-icon-btn, .icon-btn, .link-card-btn, .copy-card-btn');
-    if (!btn) return;
+    const btn = e.target.closest('.copy-icon-btn, .icon-btn, .link-card-btn, .copy-card-btn, .nav-btn, .mobile-dropdown-btn');
+    if (!btn || btn.hasAttribute('data-copy-prompt')) return;
     
     const isCopyBtn = (btn.title && btn.title.toLowerCase().includes('copy')) || 
                       (btn.id && btn.id.toLowerCase().includes('copy')) || 
